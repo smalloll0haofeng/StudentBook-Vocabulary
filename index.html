@@ -1,44 +1,65 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <title>翰林111三上國語第10、11、12語詞與生字隨機產生器</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 60px;
-            background-color: #f0f8ff;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-        button:active {
-            transform: scale(0.95);
-        }
-        #output {
-            font-size: 36px;
-            color: #ff4500;
-            margin: 20px 0;
-            min-height: 50px;
-            word-break: break-all;
-        }
-        #list {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-        .button-row {
-            display: inline-flex;
-            gap: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>翰林111三上國語語詞與生字隨機產生器</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background: linear-gradient(-45deg, #f0f8ff, #ffe4e1, #e6e6fa, #fafad2);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        color: #333;
+    }
+    @keyframes gradientBG {
+        0% {background-position:0% 50%}
+        50% {background-position:100% 50%}
+        100% {background-position:0% 50%}
+    }
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 8px;
+        border: none;
+        transition: all 0.2s;
+        background-color: #ff8c00;
+        color: white;
+        font-weight: bold;
+    }
+    button:hover {
+        background-color: #ffa500;
+        transform: scale(1.05);
+    }
+    button:active {
+        transform: scale(0.95);
+        background-color: #ff7f50;
+    }
+    #output {
+        font-size: 36px;
+        color: #ff4500;
+        margin: 20px 0;
+        min-height: 60px;
+        word-break: break-word;
+        transition: opacity 0.3s;
+    }
+    #listWords, #listMyWords {
+        margin-top: 20px;
+        font-size: 18px;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+    .button-row {
+        display: inline-flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+</style>
 </head>
-
 <body>
 
 <h1>翰林111三上國語第10、11、12語詞與生字隨機產生器</h1>
@@ -47,11 +68,9 @@
 <button onclick="setMode('norepeat')">🚫 不重複模式 🚫</button>
 
 <br><br>
-
 <button onclick="resetAll()">🧹 清空並重新開始 🧹</button>
 
 <br><br>
-
 <div class="button-row">
     <button onclick="generateWord()">抽一個語詞</button>
     <button onclick="generateMyWord()">抽一個生字</button>
@@ -83,18 +102,15 @@ const myWords = [
 let mode = "repeat";
 let remainingWords = [...words];
 let usedWords = [];
-
 let remainingMyWords = [...myWords];
 let usedMyWords = [];
 
-// 切換模式
 function setMode(newMode) {
     mode = newMode;
     resetAll();
     document.getElementById("output").innerText = "已切換模式：" + (mode === "repeat" ? "可重複" : "不重複");
 }
 
-// 重置所有狀態
 function resetAll() {
     remainingWords = [...words];
     usedWords = [];
@@ -105,7 +121,6 @@ function resetAll() {
     document.getElementById("listMyWords").innerText = "已抽過的生字：尚未開始";
 }
 
-// 顯示抽字動畫
 function showOutput(word) {
     const output = document.getElementById("output");
     output.style.opacity = 0;
@@ -115,10 +130,8 @@ function showOutput(word) {
     }, 100);
 }
 
-// 抽課本生字
 function generateWord() {
     let word;
-
     if (mode === "repeat") {
         word = words[Math.floor(Math.random() * words.length)];
         if (!usedWords.includes(word)) usedWords.push(word);
@@ -131,15 +144,12 @@ function generateWord() {
         word = remainingWords.splice(i, 1)[0];
         usedWords.push(word);
     }
-
     showOutput(word);
     document.getElementById("listWords").innerText = "已抽過的語詞：" + (usedWords.length ? usedWords.join("、") : "尚未開始");
 }
 
-// 抽我的字
 function generateMyWord() {
     let word;
-
     if (mode === "repeat") {
         word = myWords[Math.floor(Math.random() * myWords.length)];
         if (!usedMyWords.includes(word)) usedMyWords.push(word);
@@ -152,7 +162,6 @@ function generateMyWord() {
         word = remainingMyWords.splice(i, 1)[0];
         usedMyWords.push(word);
     }
-
     showOutput(word);
     document.getElementById("listMyWords").innerText = "已抽過的生字：" + (usedMyWords.length ? usedMyWords.join("、") : "尚未開始");
 }
@@ -160,3 +169,4 @@ function generateMyWord() {
 
 </body>
 </html>
+
