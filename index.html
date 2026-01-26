@@ -2,10 +2,161 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>浩鋒的網站</title>
+    <title>翰林111三上國語第10、11、12語詞與生字隨機產生器</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 60px;
+            background-color: #f0f8ff;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        #output {
+            font-size: 36px;
+            color: #ff4500;
+            margin: 20px 0;
+            min-height: 50px;
+            word-break: break-all;
+        }
+        #list {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .button-row {
+            display: inline-flex;
+            gap: 10px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>歡迎來到我的網站！🎉</h1>
-    <p>這是我的第一個中文網站，非常酷對吧？</p>
+
+<h1>翰林111三上國語第10、11、12語詞與生字隨機產生器</h1>
+
+<button onclick="setMode('repeat')">🔁 可重複模式 🔁</button>
+<button onclick="setMode('norepeat')">🚫 不重複模式 🚫</button>
+
+<br><br>
+
+<button onclick="resetAll()">🧹 清空並重新開始 🧹</button>
+
+<br><br>
+
+<div class="button-row">
+    <button onclick="generateWord()">抽一個語詞</button>
+    <button onclick="generateMyWord()">抽一個生字</button>
+</div>
+
+<div id="output">⬆ 點上面開始 ⬆</div>
+<div id="listWords">已抽過的語詞：尚未開始</div>
+<div id="listMyWords">已抽過的生字：尚未開始</div>
+
+<script>
+const words = [
+"ㄏㄨㄣ-禮","ㄗㄨˊ群","衣ㄈㄨˊ","新ㄌㄤˊ","ㄘㄢ-加","ㄉㄞˋ表",
+"ㄕㄨˋ縛","敬ㄐㄧㄡˇ","致ㄐㄧㄥˋ","隱ㄘㄤˊ","ㄒㄧˊ俗","習ㄙㄨˊ",
+"大ㄆㄞˊ長龍","珍ㄒㄧˊ","ㄏㄨˋ助","ㄉㄤˋ鞦韆","ㄕˋ品",
+"ㄔㄨˊ去","大ㄕㄣˇ","ㄧㄢ-火","大ㄆㄠˋ",
+"ㄒㄧㄡ-理","ㄔㄤˇ商","ㄍㄨㄢ-門","ㄐㄧㄢˇ驗（木部）","ㄔㄚˊ尋","ㄌㄧㄥˊ食",
+"ㄅㄧㄢ-炮","師ㄈㄨˋ","ㄊㄨㄢˊ圓","ㄕㄥˋ下","ㄇㄛˋㄇㄛˋ 的關心",
+"生ㄅㄧㄥˋ","很ㄐㄧˇ","ㄉㄡˋ笑了大家","小ㄨㄚˊ",
+"輾ㄧㄚ","大ㄕㄨ（破音字）","握"
+];
+
+const myWords = [
+"婚","族","服","郎","參","代","束","酒","敬","藏","習",
+"排","惜","互","除","嬸","煙","炮","村","修","廠","關",
+"檢","查","零","團","剩","默","粉","病","擠","床","逗",
+"娃","壓","俗","催","叔","握"
+];
+
+let mode = "repeat";
+let remainingWords = [...words];
+let usedWords = [];
+
+let remainingMyWords = [...myWords];
+let usedMyWords = [];
+
+// 切換模式
+function setMode(newMode) {
+    mode = newMode;
+    resetAll();
+    document.getElementById("output").innerText = "已切換模式：" + (mode === "repeat" ? "可重複" : "不重複");
+}
+
+// 重置所有狀態
+function resetAll() {
+    remainingWords = [...words];
+    usedWords = [];
+    remainingMyWords = [...myWords];
+    usedMyWords = [];
+    document.getElementById("output").innerText = "⬆ 點上面開始 ⬆";
+    document.getElementById("listWords").innerText = "已抽過的語詞：尚未開始";
+    document.getElementById("listMyWords").innerText = "已抽過的生字：尚未開始";
+}
+
+// 顯示抽字動畫
+function showOutput(word) {
+    const output = document.getElementById("output");
+    output.style.opacity = 0;
+    setTimeout(() => {
+        output.innerText = word;
+        output.style.opacity = 1;
+    }, 100);
+}
+
+// 抽課本生字
+function generateWord() {
+    let word;
+
+    if (mode === "repeat") {
+        word = words[Math.floor(Math.random() * words.length)];
+        if (!usedWords.includes(word)) usedWords.push(word);
+    } else {
+        if (remainingWords.length === 0) {
+            alert("不重複模式已全部抽完！");
+            return;
+        }
+        const i = Math.floor(Math.random() * remainingWords.length);
+        word = remainingWords.splice(i, 1)[0];
+        usedWords.push(word);
+    }
+
+    showOutput(word);
+    document.getElementById("listWords").innerText = "已抽過的語詞：" + (usedWords.length ? usedWords.join("、") : "尚未開始");
+}
+
+// 抽我的字
+function generateMyWord() {
+    let word;
+
+    if (mode === "repeat") {
+        word = myWords[Math.floor(Math.random() * myWords.length)];
+        if (!usedMyWords.includes(word)) usedMyWords.push(word);
+    } else {
+        if (remainingMyWords.length === 0) {
+            alert("生字已全部抽完！");
+            return;
+        }
+        const i = Math.floor(Math.random() * remainingMyWords.length);
+        word = remainingMyWords.splice(i, 1)[0];
+        usedMyWords.push(word);
+    }
+
+    showOutput(word);
+    document.getElementById("listMyWords").innerText = "已抽過的生字：" + (usedMyWords.length ? usedMyWords.join("、") : "尚未開始");
+}
+</script>
+
 </body>
 </html>
