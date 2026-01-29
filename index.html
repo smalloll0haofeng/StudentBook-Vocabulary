@@ -1,64 +1,80 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>翰林111三上國語語詞與生字隨機產生器</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 50px;
-        background: linear-gradient(-45deg, #f0f8ff, #ffe4e1, #e6e6fa, #fafad2);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-        color: #333;
-    }
-    @keyframes gradientBG {
-        0% {background-position:0% 50%}
-        50% {background-position:100% 50%}
-        100% {background-position:0% 50%}
-    }
-    button {
-        padding: 12px 25px;
-        font-size: 16px;
-        margin: 5px;
-        cursor: pointer;
-        border-radius: 8px;
-        border: none;
-        transition: all 0.2s;
-        background-color: #ff8c00;
-        color: white;
-        font-weight: bold;
-    }
-    button:hover {
-        background-color: #ffa500;
-        transform: scale(1.05);
-    }
-    button:active {
-        transform: scale(0.95);
-        background-color: #ff7f50;
-    }
-    #output {
-        font-size: 36px;
-        color: #ff4500;
-        margin: 20px 0;
-        min-height: 60px;
-        word-break: break-word;
-        transition: opacity 0.3s;
-    }
-    #listWords, #listMyWords {
-        margin-top: 20px;
-        font-size: 18px;
-        word-break: break-word;
-        white-space: pre-wrap;
-    }
-    .button-row {
-        display: inline-flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>翰林111三上國語語詞與生字隨機產生器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: linear-gradient(-45deg, #f0f8ff, #ffe4e1, #e6e6fa, #fafad2);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #333;
+        }
+        @keyframes gradientBG {
+            0% {background-position:0% 50%}
+            50% {background-position:100% 50%}
+            100% {background-position:0% 50%}
+        }
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            transition: all 0.2s;
+            background-color: #ff8c00;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #ffa500;
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+            background-color: #ff7f50;
+        }
+        #output {
+            font-size: 36px;
+            color: #ff4500;
+            margin: 20px 0;
+            min-height: 60px;
+            word-break: break-word;
+            transition: opacity 0.3s;
+        }
+        #listWords, #listMyWords {
+            margin-top: 20px;
+            font-size: 18px;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+        .button-row {
+            display: inline-flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* 暴雷文字 CSS */
+        .spoiler {
+            background-color: #2f3136;
+            color: #999;          /* 灰灰文字「答案」 */
+            border-radius: 6px;
+            padding: 4px 10px;
+            margin-left: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .spoiler.reveal {
+            background-color: transparent;
+            color: #ff4500;       /* 點開變中文紅色 */
+        }
+    </style>
 </head>
 <body>
 
@@ -81,92 +97,151 @@
 <div id="listMyWords">已抽過的生字：尚未開始</div>
 
 <script>
-const words = [
-"ㄏㄨㄣ-禮","ㄗㄨˊ群","衣ㄈㄨˊ","新ㄌㄤˊ","ㄘㄢ-加","ㄉㄞˋ表",
-"ㄕㄨˋ縛","敬ㄐㄧㄡˇ","致ㄐㄧㄥˋ","隱ㄘㄤˊ","ㄒㄧˊ俗","習ㄙㄨˊ",
-"大ㄆㄞˊ長龍","珍ㄒㄧˊ","ㄏㄨˋ助","ㄉㄤˋ鞦韆","ㄕˋ品",
-"ㄔㄨˊ去","大ㄕㄣˇ","ㄧㄢ-火","大ㄆㄠˋ",
-"ㄒㄧㄡ-理","ㄔㄤˇ商","ㄍㄨㄢ-門","ㄐㄧㄢˇ驗（木部）","ㄔㄚˊ尋","ㄌㄧㄥˊ食",
-"ㄅㄧㄢ-炮","師ㄈㄨˋ","ㄊㄨㄢˊ圓","ㄕㄥˋ下","ㄇㄛˋㄇㄛˋ 的關心",
-"生ㄅㄧㄥˋ","很ㄐㄧˇ","ㄉㄡˋ笑了大家","小ㄨㄚˊ",
-"輾ㄧㄚ","大ㄕㄨ（破音字）","握"
-];
+    const words = [
+        "ㄏㄨㄣ-禮","ㄗㄨˊ群","衣ㄈㄨˊ","新ㄌㄤˊ","ㄘㄢ-加","ㄉㄞˋ表",
+        "ㄕㄨˋ縛","敬ㄐㄧㄡˇ","致ㄐㄧㄥˋ","隱ㄘㄤˊ","ㄒㄧˊ俗","習ㄙㄨˊ",
+        "大ㄆㄞˊ長龍","珍ㄒㄧˊ","ㄏㄨˋ助","ㄉㄤˋ鞦韆","ㄕˋ品",
+        "ㄔㄨˊ去","大ㄕㄣˇ","ㄧㄢ-火","大ㄆㄠˋ",
+        "ㄒㄧㄡ-理","ㄔㄤˇ商","ㄍㄨㄢ-門","ㄐㄧㄢˇ驗（木部）","ㄔㄚˊ尋","ㄌㄧㄥˊ食",
+        "ㄅㄧㄢ-炮","師ㄈㄨˋ","ㄊㄨㄢˊ圓","ㄕㄥˋ下","ㄇㄛˋㄇㄛˋ 的關心",
+        "生ㄅㄧㄥˋ","很ㄐㄧˇ","ㄉㄡˋ笑了大家","小ㄨㄚˊ",
+        "輾ㄧㄚ","大ㄕㄨ（破音字）","ㄨㄛˋ手"
+    ];
 
-const myWords = [
-"婚","族","服","郎","參","代","束","酒","敬","藏","習",
-"排","惜","互","除","嬸","煙","炮","村","修","廠","關",
-"檢","查","零","團","剩","默","粉","病","擠","床","逗",
-"娃","壓","俗","催","叔","握"
-];
+    const myWords = [
+        "婚","族","服","郎","參","代","束","酒","敬","藏","習",
+        "排","惜","互","除","嬸","煙","炮","村","修","廠","關",
+        "檢","查","零","團","剩","默","粉","病","擠","床","逗",
+        "娃","壓","俗","催","叔","握"
+    ];
 
-let mode = "repeat";
-let remainingWords = [...words];
-let usedWords = [];
-let remainingMyWords = [...myWords];
-let usedMyWords = [];
+    let mode = "repeat";
+    let remainingWords = [...words];
+    let usedWords = [];
+    let remainingMyWords = [...myWords];
+    let usedMyWords = [];
 
-function setMode(newMode) {
-    mode = newMode;
-    resetAll();
-    document.getElementById("output").innerText = "已切換模式：" + (mode === "repeat" ? "可重複" : "不重複");
-}
+    // 注音字詞對應中文暴雷
+    const wordSpoilers = {
+        "ㄏㄨㄣ-禮":"婚",
+        "ㄗㄨˊ群":"族",
+        "衣ㄈㄨˊ":"服",
+        "新ㄌㄤˊ":"郎",
+        "ㄘㄢ-加":"參",
+        "ㄉㄞˋ表":"代",
+        "ㄕㄨˋ縛":"束",
+        "敬ㄐㄧㄡˇ":"酒",
+        "致ㄐㄧㄥˋ":"敬",
+        "隱ㄘㄤˊ":"藏",
+        "ㄒㄧˊ俗":"俗",
+        "習ㄙㄨˊ":"習",
+        "大ㄆㄞˊ長龍":"排",
+        "珍ㄒㄧˊ":"惜",
+        "ㄏㄨˋ助":"互",
+        "ㄉㄤˋ鞦韆":"蹺蹺板",
+        "ㄕˋ品":"事物",
+        "ㄔㄨˊ去":"除",
+        "大ㄕㄣˇ":"嬸",
+        "ㄧㄢ-火":"煙",
+        "大ㄆㄠˋ":"炮",
+        "ㄒㄧㄡ-理":"修",
+        "ㄔㄤˇ商":"廠",
+        "ㄍㄨㄢ-門":"關",
+        "ㄐㄧㄢˇ驗（木部）":"檢",
+        "ㄔㄚˊ尋":"查",
+        "ㄌㄧㄥˊ食":"零",
+        "ㄅㄧㄢ-炮":"粉",
+        "師ㄈㄨˋ":"師",
+        "ㄊㄨㄢˊ圓":"團",
+        "ㄕㄥˋ下":"剩",
+        "ㄇㄛˋㄇㄛˋ 的關心":"默",
+        "生ㄅㄧㄥˋ":"病",
+        "很ㄐㄧˇ":"急",
+        "ㄉㄡˋ笑了大家":"鬥",
+        "小ㄨㄚˊ":"娃",
+        "輾ㄧㄚ":"壓",
+        "大ㄕㄨ（破音字）":"俗",
+        "ㄨㄛˋ手":"握"
+    };
 
-function resetAll() {
-    remainingWords = [...words];
-    usedWords = [];
-    remainingMyWords = [...myWords];
-    usedMyWords = [];
-    document.getElementById("output").innerText = "⬆ 點上面開始 ⬆";
-    document.getElementById("listWords").innerText = "已抽過的語詞：尚未開始";
-    document.getElementById("listMyWords").innerText = "已抽過的生字：尚未開始";
-}
-
-function showOutput(word) {
-    const output = document.getElementById("output");
-    output.style.opacity = 0;
-    setTimeout(() => {
-        output.innerText = word;
-        output.style.opacity = 1;
-    }, 100);
-}
-
-function generateWord() {
-    let word;
-    if (mode === "repeat") {
-        word = words[Math.floor(Math.random() * words.length)];
-        if (!usedWords.includes(word)) usedWords.push(word);
-    } else {
-        if (remainingWords.length === 0) {
-            alert("不重複模式已全部抽完！");
-            return;
-        }
-        const i = Math.floor(Math.random() * remainingWords.length);
-        word = remainingWords.splice(i, 1)[0];
-        usedWords.push(word);
+    function setMode(newMode) {
+        mode = newMode;
+        resetAll();
+        document.getElementById("output").innerText = "已切換模式：" + (mode === "repeat" ? "可重複" : "不重複");
     }
-    showOutput(word);
-    document.getElementById("listWords").innerText = "已抽過的語詞：" + (usedWords.length ? usedWords.join("、") : "尚未開始");
-}
 
-function generateMyWord() {
-    let word;
-    if (mode === "repeat") {
-        word = myWords[Math.floor(Math.random() * myWords.length)];
-        if (!usedMyWords.includes(word)) usedMyWords.push(word);
-    } else {
-        if (remainingMyWords.length === 0) {
-            alert("生字已全部抽完！");
-            return;
-        }
-        const i = Math.floor(Math.random() * remainingMyWords.length);
-        word = remainingMyWords.splice(i, 1)[0];
-        usedMyWords.push(word);
+    function resetAll() {
+        remainingWords = [...words];
+        usedWords = [];
+        remainingMyWords = [...myWords];
+        usedMyWords = [];
+        document.getElementById("output").innerText = "⬆ 點上面開始 ⬆";
+        document.getElementById("listWords").innerText = "已抽過的語詞：尚未開始";
+        document.getElementById("listMyWords").innerText = "已抽過的生字：尚未開始";
     }
-    showOutput(word);
-    document.getElementById("listMyWords").innerText = "已抽過的生字：" + (usedMyWords.length ? usedMyWords.join("、") : "尚未開始");
-}
+
+    function showOutput(word) {
+        const output = document.getElementById("output");
+        output.style.opacity = 0;
+        setTimeout(() => {
+            const spoiler = wordSpoilers[word];
+            if (spoiler) {
+                // 灰灰「答案」初始顯示
+                output.innerHTML = `${word}<span class="spoiler" onclick="toggleSpoiler(this)" data-text="${spoiler}">答案</span>`;
+            } else {
+                output.innerText = word;
+            }
+            output.style.opacity = 1;
+        }, 100);
+    }
+
+    function toggleSpoiler(el) {
+        const content = el.getAttribute("data-text");
+        if (el.classList.contains("reveal")) {
+            el.classList.remove("reveal");
+            el.innerText = "答案";    // 點回去又變灰灰「答案」
+        } else {
+            el.classList.add("reveal");
+            el.innerText = content;  // 點開顯示中文
+        }
+    }
+
+    function generateWord() {
+        let word;
+        if (mode === "repeat") {
+            word = words[Math.floor(Math.random() * words.length)];
+            if (!usedWords.includes(word)) usedWords.push(word);
+        } else {
+            if (remainingWords.length === 0) {
+                alert("不重複模式已全部抽完！");
+                return;
+            }
+            const i = Math.floor(Math.random() * remainingWords.length);
+            word = remainingWords.splice(i, 1)[0];
+            usedWords.push(word);
+        }
+        showOutput(word);
+        document.getElementById("listWords").innerText = "已抽過的語詞：" + (usedWords.length ? usedWords.join("、") : "尚未開始");
+    }
+
+    function generateMyWord() {
+        let word;
+        if (mode === "repeat") {
+            word = myWords[Math.floor(Math.random() * myWords.length)];
+            if (!usedMyWords.includes(word)) usedMyWords.push(word);
+        } else {
+            if (remainingMyWords.length === 0) {
+                alert("生字已全部抽完！");
+                return;
+            }
+            const i = Math.floor(Math.random() * remainingMyWords.length);
+            word = remainingMyWords.splice(i, 1)[0];
+            usedMyWords.push(word);
+        }
+        showOutput(word);
+        document.getElementById("listMyWords").innerText = "已抽過的生字：" + (usedMyWords.length ? usedMyWords.join("、") : "尚未開始");
+    }
 </script>
 
 </body>
 </html>
-
